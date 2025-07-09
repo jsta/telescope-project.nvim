@@ -32,9 +32,9 @@ M.project_finder = function(opts, projects)
     project.display_hostname = project.hostname:gsub('\n', '\\n') 
 
     local project_path_exists = Path:new(project.path):exists()
-    if not project_path_exists then
-      project.display_title = project.display_title .. " [deleted]"
-    end
+    -- if not project_path_exists then
+    --   project.display_title = project.display_title .. " [deleted]"
+    -- end
     for key, value in pairs(widths) do
       widths[key] = math.max(value, strings.strdisplaywidth(project[key] or ''))
     end
