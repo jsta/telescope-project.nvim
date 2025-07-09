@@ -11,6 +11,7 @@ M.project_finder = function(opts, projects)
   local display_type = opts.display_type
   local show_workspace = not opts.hide_workspace
   local widths = {
+    hostname = 0,
     title = 0,
     display_path = 0,
   }
@@ -26,7 +27,10 @@ M.project_finder = function(opts, projects)
     else
       project.display_path = ''
     end
+
     project.display_title = project.title:gsub('\n', '\\n')
+    project.display_hostname = project.hostname:gsub('\n', '\\n') 
+
     local project_path_exists = Path:new(project.path):exists()
     if not project_path_exists then
       project.display_title = project.display_title .. " [deleted]"
@@ -39,6 +43,7 @@ M.project_finder = function(opts, projects)
   local create_opts = {
     separator = " ",
     items = {
+      { width = widths.hostname },
       { width = widths.title },
       { width = widths.display_path },
     }
@@ -51,6 +56,7 @@ M.project_finder = function(opts, projects)
   local displayer = entry_display.create(create_opts)
   local make_display = function(project)
     local display_opts = {
+      { project.display_hostname },
       { project.display_title },
       { project.display_path }
     }
