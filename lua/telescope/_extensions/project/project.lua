@@ -1,4 +1,5 @@
 ---@class Project
+---@field hostname string
 ---@field title string
 ---@field path string
 ---@field workspace string
@@ -9,14 +10,16 @@ Project.__index = Project
 
 Project.sep = '='
 
+---@param hostname string
 ---@param title string
 ---@param path string
 ---@param workspace string
 ---@param activated number
 ---@param last_accessed_time number?
 ---@return Project
-function Project:new(title, path, workspace, activated, last_accessed_time)
+function Project:new(hostname, title, path, workspace, activated, last_accessed_time)
   local obj = {
+    hostname = hostname,
     title = title,
     path = path,
     workspace = workspace,
@@ -65,9 +68,9 @@ function Project:encode()
   local sep = Project.sep
   local escaped_parts
   if self.last_accessed_time then
-    escaped_parts = { escape(sep, self.title, self.path, self.workspace, self.activated, self.last_accessed_time) }
+    escaped_parts = { escape(sep, self.hostname, self.title, self.path, self.workspace, self.activated, self.last_accessed_time) }
   else
-    escaped_parts = { escape(sep, self.title, self.path, self.workspace, self.activated) }
+    escaped_parts = { escape(sep, self.hostname, self.title, self.path, self.workspace, self.activated) }
   end
   local line = table.concat(escaped_parts, sep)
   return line
@@ -83,7 +86,7 @@ function Project.decode(self, line)
   end
   local sep = Project.sep
   local fields = vim.fn.split(line, [[\(\\\)\@<!=]], 1)
-  local title, path, workspace, activated, last_accessed_time = unescape(sep, unpack(fields))
+  local hostname, title, path, workspace, activated, last_accessed_time = unescape(sep, unpack(fields))
   if workspace == '' then
     workspace = 'w0'
   end
@@ -91,7 +94,7 @@ function Project.decode(self, line)
   if not activated then
     activated = 1
   end
-  return Project:new(title, path, workspace, activated, tonumber(last_accessed_time))
+  return Project:new(hostname, title, path, workspace, activated, tonumber(last_accessed_time))
 end
 
 return Project
