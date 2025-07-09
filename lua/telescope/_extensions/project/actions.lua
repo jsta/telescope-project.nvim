@@ -45,10 +45,10 @@ local add_project_to_list = function(path)
 
   local file = io.open(_utils.telescope_projects_file, "w")
   for _, project in pairs(projects) do
-    if project.path == path then
-      project.activated = 1
-      path_not_in_projects = false
-    end
+    -- if project.path == path then
+    --   project.activated = 1
+    --   path_not_in_projects = false
+    -- end
     _utils.store_project(file, project)
   end
 
